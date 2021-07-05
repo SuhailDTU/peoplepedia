@@ -44,6 +44,13 @@ public class LoginController {
             passwordState.setTextFill(Color.GREEN);
             Stage stage = (Stage) textField.getScene().getWindow();
 
+            //waits a bit before proceedgin
+          /*  try {
+                wait(500);
+            }catch (InterruptedException i){
+                i.printStackTrace();
+            }*/
+
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../controller/view/sample.fxml"));
                 stage.setTitle("Peoplepedia");

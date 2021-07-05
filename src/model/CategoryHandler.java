@@ -1,14 +1,13 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class CategoryHandler {
-
+    Conversion converter = new Conversion();
     public CategoryHandler(){
     }
+    //reads in catagories from comma seperated file
     public ArrayList<Categories> readincatagories(String filename){
         ArrayList <Categories> categories = new ArrayList<Categories>();
         String currentline;
@@ -65,6 +64,27 @@ public class CategoryHandler {
         catch (IOException ioException){}
 
         return categories;
+
+    }
+
+    public void addEntry(String category, String name, ArrayList<String> urls){
+        converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");//convert to listing form
+
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("src/testpeoplepedia.txt", true))) {
+            bufferedWriter.write("\n" + category + ";" + name + ";" + urls.size() );
+
+            for(int i = 0 ; i < urls.size(); i++){
+                bufferedWriter.write(";" + urls.get(i));
+            }
+
+
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+        converter.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt");
+        File listingfile = new File("src/testpeoplepedia.txt");// delete file after use
+        listingfile.delete();
+
 
     }
 

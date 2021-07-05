@@ -10,10 +10,12 @@ public class Testing {
 
     public static void main(String[] args) {
        CategoryHandler catagoryHandler = new CategoryHandler();
+       Conversion conversion = new Conversion();
 
-       ArrayList<Categories> categories = catagoryHandler.readincatagories("C:\\Users\\suhai\\Desktop\\Diverse\\testpeoplepedia.txt");
+       conversion.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");
+       ArrayList<Categories> categories = catagoryHandler.readincatagories("src/testpeoplepedia.txt");
 
-       /*
+
         for (Categories catagory: categories) {
             ArrayList<Person> people = catagory.getPeople();
             System.out.println("---"+catagory.getCatagoryname());
@@ -24,16 +26,25 @@ public class Testing {
                     System.out.println(url);
                 }
             }
-        }*/
-
-        Conversion conversion = new Conversion();
-
-        conversion.ConvertFromCommafileToHexEncodedUTF8("C:\\Users\\suhai\\Desktop\\Diverse\\testpeoplepedia.txt");
-
-        conversion.readhexencodedFile("src/encodedfile.txt");
+        }
 
 
 
+        //conversion.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt");
+
+        //conversion.readhexencodedFile("src/encodedfile.txt");
+       // conversion.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");//convert to listing form
+
+
+        //testing addding entries to hexencoded file by converting back and forth
+        /*
+        ArrayList<String> testArrayList = new ArrayList<String>();
+        testArrayList.add("url4");
+        testArrayList.add("url5");
+        testArrayList.add("url6");
+
+        catagoryHandler.addEntry("Race5", "yellow", testArrayList );
+        */
 
 
 
