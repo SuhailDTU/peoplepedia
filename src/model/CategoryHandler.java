@@ -68,7 +68,7 @@ public class CategoryHandler {
     }
 
     public void addEntry(String category, String name, ArrayList<String> urls){
-        converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");//convert to listing form
+        converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt", "src\\testpeoplepedia.txt");//convert to listing form
 
         try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("src/testpeoplepedia.txt", true))) {
             bufferedWriter.write("\n" + category + ";" + name + ";" + urls.size() );
@@ -81,13 +81,56 @@ public class CategoryHandler {
         }catch (IOException ioException){
             ioException.printStackTrace();
         }
-        converter.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt");
+        converter.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt", "src/encodedfile.txt");
         File listingfile = new File("src/testpeoplepedia.txt");// delete file after use
         listingfile.delete();
 
 
     }
 
+    //this deletes an entry from the lsiting file
+    //it does this by reading in the listing file into an arraylist of strings and deleting the string that contains both the catagory and name
+    public void deleteEntry(String category, String name){
+        converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt", "src\\testpeoplepedia.txt");
+        ArrayList<String> dataArray = new ArrayList<String>();
+        String line;
+        String dataString;
+
+
+        //read in data into string array
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader("src/testpeoplepedia.txt"))) {
+            while((line = bufferedReader.readLine()) != null){
+                dataArray.add(line);
+            }
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+
+
+        //remove listing
+        for(int i = 0; i < dataArray.size(); i++){
+            dataString = dataArray.get(i);
+            if(dataString.contains(category) && dataString.contains(name)){ //if line containing category and name found then remove it
+                dataArray.remove(i);
+                break;
+            }
+        }
+
+        //write to file
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("src/testpeoplepedia.txt"))) {
+           for (int i = 0; i < dataArray.size()-1; i++){
+               bufferedWriter.write(dataArray.get(i) + "\n");
+
+           }
+           bufferedWriter.write(dataArray.get(dataArray.size()-1));
+
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+
+        }
+        converter.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt", "src/encodedfile.txt");
+        Conversion.deleteFile("src/testpeoplepedia.txt");
+    }
 
 
 }

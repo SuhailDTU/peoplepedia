@@ -43,7 +43,17 @@ public class AddEntryScreen {
     public void finishEntry(ActionEvent actionEvent) {
         //split the urls by delimiter and put in arraylist
         String[] urlTextArray = urlTextArea.getText().split(";");
-        ArrayList<String> urlTextArraylist = new ArrayList<String>(Arrays.asList(urlTextArray));
+        ArrayList<String> urlTextArraylist;
+
+        //if the field was empty give empty arraylist instead of arraylist of lenght 1 with empty string
+        if (urlTextArray.length == 1 && urlTextArray[0].isEmpty()){
+           urlTextArraylist = new ArrayList<String>();
+
+        }
+        else{ //proceed as normal
+            urlTextArraylist = new ArrayList<String>(Arrays.asList(urlTextArray));
+        }
+
 
         //use method to entry add to file
         categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlTextArraylist);

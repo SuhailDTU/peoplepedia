@@ -15,13 +15,18 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import model.Categories;
 import model.CategoryHandler;
 import model.Conversion;
 import model.Person;
 
+import javax.crypto.Cipher;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -45,7 +50,7 @@ public class Controller {
 
 
     public Controller(){
-        converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");//convert from hex to comma seperated file "src/testpeoplepedia.txt"
+        converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt", "src\\testpeoplepedia.txt");//convert from hex to comma seperated file "src/testpeoplepedia.txt"
         categoriesList = catagoryHandler.readincatagories("src/testpeoplepedia.txt"); //use converted file
         File listingfile = new File("src/testpeoplepedia.txt");// delete file after use
         listingfile.delete();
@@ -123,7 +128,6 @@ public class Controller {
 
         updatePersonListcellAndData(); //set listeners on both listviews
 
-
     }
 
     public void updatePersonListcellAndData(){
@@ -182,6 +186,7 @@ public class Controller {
 
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../controller/view/AddEntryScreen.fxml"));
+
             stage.setScene(new Scene(root, 800, 500));
             stage.setTitle("Entry Adder");
             stage.show();
@@ -189,6 +194,36 @@ public class Controller {
             ioException.printStackTrace();
         }
 
+
+
+    }
+
+    public void edit(ActionEvent actionEvent) {
+        Stage stage = (Stage) nameLabel.getScene().getWindow();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/EditScreen.fxml"));
+            Parent root = fxmlLoader.load();
+            EditScreen editScreen = fxmlLoader.getController();
+
+;
+            //set as default values in textfield when editing entry
+            editScreen.setCategorytextfield(listvieww.getSelectionModel().getSelectedItem().getCatagoryname());
+            editScreen.setNameTextField(listvieww2.getSelectionModel().getSelectedItem().getName());
+            editScreen.setUrlTextArea(listvieww2.getSelectionModel().getSelectedItem().getUrlCommaseperated());
+
+            //pass to controller inorder to keep track of what old entry to delete when the new edited one is added
+            editScreen.setCategory(listvieww.getSelectionModel().getSelectedItem().getCatagoryname());
+            editScreen.setName(listvieww2.getSelectionModel().getSelectedItem().getName());
+
+            //catagoryHandler.deleteEntry(listvieww.getSelectionModel().getSelectedItem().getCatagoryname(), listvieww2.getSelectionModel().getSelectedItem().getName());
+
+
+            stage.setScene(new Scene(root, 800, 500));
+            stage.setTitle("Edit");
+            stage.show();
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+        }
 
 
     }

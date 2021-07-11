@@ -22,4 +22,17 @@ public class Person {
     public void setUrls(ArrayList<String> urls) {
         this.urls = urls;
     }
+
+    public String getUrlCommaseperated(){
+        String urlString = "";
+
+        //if the list is not empty fill string with contents
+        if(urls.size() != 0) {
+            urlString = urlString + urls.get(0);
+            for (int i = 1; i < urls.size(); i++) {
+                urlString = urlString + ";" + urls.get(i);
+            }
+        }
+        return urlString;
+    }
 }

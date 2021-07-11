@@ -61,20 +61,30 @@
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="83.59996643066407" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="277.2000335693359" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="35.79999198913574" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="289.40000801086427" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="46.799966430664085" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <AnchorPane maxHeight="-Infinity">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-33.0" maxHeight="38.0" minHeight="38.0" prefHeight="38.4" prefWidth="149.6" style="-fx-background-color: C06C84;" text="People" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-33.0" layoutY="6.0" maxHeight="40.0" minHeight="34.0" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: C06C84;" text="People" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
                </children>
             </AnchorPane>
-            <ListView fx:id="listvieww2" minHeight="-Infinity" minWidth="-Infinity" prefHeight="323.2" prefWidth="149.6" GridPane.rowIndex="1" />
+            <AnchorPane GridPane.rowIndex="1">
+               <children>
+                  <ListView fx:id="listvieww2" layoutY="8.0" prefHeight="285.6" prefWidth="150.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="2">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#edit" text="Edit person" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="35.0" />
+               </children>
+            </AnchorPane>
          </children>
       </GridPane>
    </right>
@@ -90,7 +100,7 @@
          <children>
             <AnchorPane GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <children>
-                  <VBox fx:id="urlbox" alignment="TOP_CENTER" layoutY="-6.0" prefHeight="306.0" prefWidth="300.0" style="-fx-background-color: FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox fx:id="urlbox" alignment="TOP_CENTER" layoutY="-6.0" prefHeight="308.8" prefWidth="300.0" style="-fx-background-color: FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <padding>
                         <Insets bottom="10.0" top="10.0" />
                      </padding>

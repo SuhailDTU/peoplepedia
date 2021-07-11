@@ -1,18 +1,16 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import javax.crypto.*;
 
 public class Testing {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BadPaddingException{
        CategoryHandler catagoryHandler = new CategoryHandler();
        Conversion conversion = new Conversion();
 
-       conversion.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");
+       conversion.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt", "src\\testpeoplepedia.txt");
        ArrayList<Categories> categories = catagoryHandler.readincatagories("src/testpeoplepedia.txt");
 
 
@@ -28,12 +26,17 @@ public class Testing {
             }
         }
 
+        //delete entry
+        //catagoryHandler.deleteEntry("Race1", "blue");
+
+        //see current state of encoded file by decoding it
+        //conversion.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt", "src\\testpeoplepedia.txt");
 
 
-        //conversion.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt");
 
+        //print contents of encoded file
         //conversion.readhexencodedFile("src/encodedfile.txt");
-       // conversion.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt");//convert to listing form
+
 
 
         //testing addding entries to hexencoded file by converting back and forth
@@ -47,7 +50,10 @@ public class Testing {
         */
 
 
-
+        //Conversion.encryptOrDecryptFile("pollo1234", "src/pass.txt", "src/passHid.txt", Cipher.ENCRYPT_MODE );
+        //Conversion.encryptOrDecryptFile("1234", "src/passHid.txt", "src/pass.txt", Cipher.DECRYPT_MODE );
+        //Conversion.encryptOrDecryptFile("pollo1234", "src/encodedfile.txt", "src/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE );
+        //Conversion.encryptOrDecryptFile("1234", "src/encryptTest.txt", "src/decryptTest.txt", Cipher.DECRYPT_MODE );
 
     }
 
