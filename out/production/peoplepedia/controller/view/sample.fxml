@@ -80,7 +80,7 @@
                   <ListView fx:id="listvieww2" layoutY="8.0" prefHeight="285.6" prefWidth="150.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-            <AnchorPane GridPane.rowIndex="2">
+            <AnchorPane style="-fx-background-color: white; -fx-border-color: lightgrey;" GridPane.rowIndex="2">
                <children>
                   <Button mnemonicParsing="false" onAction="#edit" text="Edit person" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="35.0" />
                </children>

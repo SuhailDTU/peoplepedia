@@ -90,7 +90,7 @@ public class CategoryHandler {
 
     //this deletes an entry from the lsiting file
     //it does this by reading in the listing file into an arraylist of strings and deleting the string that contains both the catagory and name
-    public void deleteEntry(String category, String name){
+    public void deleteEntry(String category, String name, String commaSeperatedUrls){
         converter.ConvertFromHexencodedFileToCommafile("src/encodedfile.txt", "src\\testpeoplepedia.txt");
         ArrayList<String> dataArray = new ArrayList<String>();
         String line;
@@ -106,13 +106,16 @@ public class CategoryHandler {
             ioException.printStackTrace();
         }
 
-
         //remove listing
         for(int i = 0; i < dataArray.size(); i++){
+            //get line
             dataString = dataArray.get(i);
-            if(dataString.contains(category) && dataString.contains(name)){ //if line containing category and name found then remove it
+            //split line into tokens
+            String[] tokens = dataString.split(";");
+            //remove entry matching token 0 and 1 (catagory and name) and if the string contains the urls
+            if(tokens[0].equals(category) && tokens[1].equals(name) && dataString.contains(commaSeperatedUrls)){ //if line containing category and name found then remove it
                 dataArray.remove(i);
-                break;
+                break;//jump out after first match
             }
         }
 
@@ -120,7 +123,6 @@ public class CategoryHandler {
         try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("src/testpeoplepedia.txt"))) {
            for (int i = 0; i < dataArray.size()-1; i++){
                bufferedWriter.write(dataArray.get(i) + "\n");
-
            }
            bufferedWriter.write(dataArray.get(dataArray.size()-1));
 

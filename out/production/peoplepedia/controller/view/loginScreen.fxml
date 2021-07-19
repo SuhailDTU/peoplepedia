@@ -8,6 +8,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
@@ -27,7 +30,7 @@
          <children>
             <AnchorPane GridPane.columnIndex="1">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-6.0" text="Hello, please enter your password" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-6.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="0.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-6.0" text="Hello, please enter your password" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="23.0" />
                      </font>
@@ -36,20 +39,30 @@
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <Button fx:id="enterButton" alignment="CENTER" contentDisplay="CENTER" layoutX="133.0" layoutY="14.0" mnemonicParsing="false" onAction="#checkPassword" prefHeight="26.0" prefWidth="122.0" text="Enter">
+                  <Button fx:id="enterButton" alignment="CENTER" contentDisplay="CENTER" layoutX="133.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Enter">
                      <effect>
                         <Blend />
                      </effect>
                   </Button>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="39.0" prefWidth="36.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <AnchorPane prefHeight="39.0" prefWidth="36.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <StackPane prefHeight="150.4" prefWidth="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Circle fx:id="confirmationCircle" fill="DODGERBLUE" radius="19.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Line fx:id="line1" endX="0.4929008483886719" endY="-39.107032775878906" startX="0.4929008483886719" startY="-77.55400085449219" />
+                        <Line fx:id="line2" endX="-43.471126556396484" endY="-0.69947749376297" startX="-80.76406860351562" startY="-0.69947749376297" />
+                     </children>
+                  </StackPane>
+               </children></AnchorPane>
             <Label fx:id="passwordState" alignment="CENTER" contentDisplay="CENTER" prefHeight="143.0" prefWidth="388.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
             <TextField fx:id="textField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

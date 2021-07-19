@@ -12,11 +12,9 @@ import javafx.stage.Stage;
 import model.CategoryHandler;
 import model.Conversion;
 
-import javax.xml.catalog.Catalog;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class AddEntryScreen {
 
@@ -32,43 +30,54 @@ public class AddEntryScreen {
     Conversion converter = new Conversion();
     CategoryHandler categoryHandler = new CategoryHandler();
 
+    //Reference to Scene and controller of the mainscreen.
+    //this is used to return to the current instance of the mainscreen instead of creating a new one
+    Scene mainScene;
+    Controller mainScreenController;
+
     public AddEntryScreen() {
     }
     
     public void initialize(){
-        
-        
+    }
+
+    public void setMainScreenController(Controller mainScreenController) {
+        this.mainScreenController = mainScreenController;
+    }
+
+    public void setMainScene(Scene mainScene) {
+        this.mainScene = mainScene;
     }
 
     public void finishEntry(ActionEvent actionEvent) {
-        //split the urls by delimiter and put in arraylist
-        String[] urlTextArray = urlTextArea.getText().split(";");
-        ArrayList<String> urlTextArraylist;
+        //only add entry if name and Catagory not empty
+        if(!(nameTextField.getText().isEmpty()) && !(Categorytextfield.getText().isEmpty()) ) {
+            //split the urls by delimiter and put in arraylist
+            String[] urlTextArray = urlTextArea.getText().split(";");
+            ArrayList<String> urlTextArraylist;
 
-        //if the field was empty give empty arraylist instead of arraylist of lenght 1 with empty string
-        if (urlTextArray.length == 1 && urlTextArray[0].isEmpty()){
-           urlTextArraylist = new ArrayList<String>();
+            //if the field was empty give empty arraylist instead of arraylist of lenght 1 with empty string
+            if (urlTextArray.length == 1 && urlTextArray[0].isEmpty()) {
+                urlTextArraylist = new ArrayList<String>();
 
+            } else { //proceed as normal
+                urlTextArraylist = new ArrayList<String>(Arrays.asList(urlTextArray));
+            }
+
+
+            //use method to entry add to file
+            categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlTextArraylist);
+
+            //update lists to show changes
+            mainScreenController.refreshListView();
         }
-        else{ //proceed as normal
-            urlTextArraylist = new ArrayList<String>(Arrays.asList(urlTextArray));
-        }
-
-
-        //use method to entry add to file
-        categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlTextArraylist);
-
 
         //get stage
-        Stage stage = (Stage) nameTextField.getScene().getWindow();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("../controller/view/sample.fxml")); //load parent node from fxml
-            stage.setTitle("Peoplepedia");
-            stage.setScene(new Scene(root, 800, 500)); //create scene with parent node and set the scene on the stage
-            stage.show(); // show stage
-        }catch (IOException ioException){
-            ioException.printStackTrace();
-        }
+        Stage stage = (Stage) nameTextField.getScene().getWindow();;
+        stage.setTitle("Peoplepedia");
+        stage.setScene(mainScene); //use reference of main scene inorder to return to main screen
+
+        stage.show(); // show stage
 
     }
 }
