@@ -2,8 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -17,11 +17,12 @@
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="477.5999755859375" minWidth="10.0" prefWidth="430.39998779296883" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="136.39999389648438" minHeight="10.0" prefHeight="136.39999389648438" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="74.00000610351563" minHeight="10.0" prefHeight="35.600006103515625" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="120.39999999999998" minHeight="10.0" prefHeight="36.199987792968756" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="144.80000915527341" minHeight="10.0" prefHeight="106.40003967285156" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="157.59999694824216" minHeight="10.0" prefHeight="83.19996032714846" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="136.39999389648438" minHeight="10.0" prefHeight="106.40000610351564" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="74.00000610351563" minHeight="10.0" prefHeight="41.599981689453145" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="120.39999999999998" minHeight="10.0" prefHeight="42.400000000000006" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="144.80000915527341" minHeight="10.0" prefHeight="99.19999084472656" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="144.80000915527341" minHeight="10.0" prefHeight="48.00000915527346" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="157.59999694824216" minHeight="10.0" prefHeight="108.80003662109374" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <TextField fx:id="Categorytextfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -51,10 +52,10 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
+            <Button layoutX="14.0" layoutY="34.0" mnemonicParsing="false" onAction="#removeFromListview" text="-" />
          </children>
       </AnchorPane>
-      <TextArea fx:id="urlTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
             <Label alignment="CENTER" prefHeight="83.0" prefWidth="430.0" text="If writing multiple urls please seperate them with the symbol ';' " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
@@ -68,7 +69,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane GridPane.rowIndex="4">
+      <AnchorPane GridPane.rowIndex="5">
          <children>
             <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
@@ -86,5 +87,17 @@
             </SplitPane>
          </children>
       </AnchorPane>
+      <ListView fx:id="UrlListview" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <AnchorPane GridPane.rowIndex="4">
+         <children>
+            <Label alignment="CENTER" layoutX="14.0" text="Add Url" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Button layoutX="14.0" layoutY="7.0" mnemonicParsing="false" onAction="#addToListView" text="+" />
+         </children>
+      </AnchorPane>
+      <TextField fx:id="urlTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    </children>
 </GridPane>

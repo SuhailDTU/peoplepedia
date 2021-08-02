@@ -5,8 +5,14 @@ import java.util.ArrayList;
 
 public class CategoryHandler {
     Conversion converter = new Conversion();
+
+
+
     public CategoryHandler(){
     }
+
+
+
     //reads in catagories from comma seperated file
     public ArrayList<Categories> readincatagories(String filename){
         ArrayList <Categories> categories = new ArrayList<Categories>();
@@ -39,7 +45,7 @@ public class CategoryHandler {
                     int index = categories.indexOf(currentcatagory);//get index of category already inlist
                     ArrayList<Person> personArrayList = categories.get(index).getPeople(); //get perople list
 
-                    personArrayList.add(currentPerson);//add to people lsit
+                    personArrayList.add(currentPerson);//add to people list
 
                     categories.get(index).setPeople(personArrayList); //replace people list in category
 
@@ -87,6 +93,25 @@ public class CategoryHandler {
 
 
     }
+    //overloaded functions signature if you want to specify the encodedfile and listingFile
+    public void addEntry(String category, String name, ArrayList<String> urls, String listingFilename, String encodedFilename){
+        converter.ConvertFromHexencodedFileToCommafile(encodedFilename, listingFilename);//convert to listing form
+
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(listingFilename, true))) {
+            bufferedWriter.write("\n" + category + ";" + name + ";" + urls.size() );
+
+            for(int i = 0 ; i < urls.size(); i++){
+                bufferedWriter.write(";" + urls.get(i));
+            }
+
+
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+        converter.ConvertFromCommafileToHexEncodedUTF8(listingFilename, encodedFilename);
+        File listingfile = new File(listingFilename);// delete file after use
+        listingfile.delete();
+    }
 
     //this deletes an entry from the lsiting file
     //it does this by reading in the listing file into an arraylist of strings and deleting the string that contains both the catagory and name
@@ -132,6 +157,51 @@ public class CategoryHandler {
         }
         converter.ConvertFromCommafileToHexEncodedUTF8("src/testpeoplepedia.txt", "src/encodedfile.txt");
         Conversion.deleteFile("src/testpeoplepedia.txt");
+    }
+
+    //overloaded function version if you want to specify the files used
+    public void deleteEntry(String category, String name, String commaSeperatedUrls, String listingFilename, String encodedFilename){
+        converter.ConvertFromHexencodedFileToCommafile(encodedFilename, listingFilename);
+        ArrayList<String> dataArray = new ArrayList<String>();
+        String line;
+        String dataString;
+
+
+        //read in data into string array
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(listingFilename))) {
+            while((line = bufferedReader.readLine()) != null){
+                dataArray.add(line);
+            }
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+
+        //remove listing
+        for(int i = 0; i < dataArray.size(); i++){
+            //get line
+            dataString = dataArray.get(i);
+            //split line into tokens
+            String[] tokens = dataString.split(";");
+            //remove entry matching token 0 and 1 (catagory and name) and if the string contains the urls
+            if(tokens[0].equals(category) && tokens[1].equals(name) && dataString.contains(commaSeperatedUrls)){ //if line containing category and name found then remove it
+                dataArray.remove(i);
+                break;//jump out after first match
+            }
+        }
+
+        //write to file
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(listingFilename))) {
+            for (int i = 0; i < dataArray.size()-1; i++){
+                bufferedWriter.write(dataArray.get(i) + "\n");
+            }
+            bufferedWriter.write(dataArray.get(dataArray.size()-1));
+
+        }catch (IOException ioException){
+            ioException.printStackTrace();
+
+        }
+        converter.ConvertFromCommafileToHexEncodedUTF8(listingFilename, encodedFilename);
+        Conversion.deleteFile(listingFilename);
     }
 
 

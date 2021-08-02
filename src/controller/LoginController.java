@@ -9,9 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -25,6 +23,7 @@ import java.util.Stack;
 
 import javafx.util.Duration;
 import model.Conversion;
+import model.EaseOfUse;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -40,6 +39,25 @@ public class LoginController {
 
     @FXML
     public Circle confirmationCircle;
+    //these are used to get color of choices
+    @FXML
+    public RadioButton colorChoice1;
+    @FXML
+    public RadioButton colorChoice2;
+    @FXML
+    public RadioButton colorChoice3;
+    @FXML
+    public Circle choice1c1;
+    @FXML
+    public Circle choice1c2;
+    @FXML
+    public Circle choice2c1;
+    @FXML
+    public Circle choice2c2;
+    @FXML
+    public Circle choice3c1;
+    @FXML
+    public Circle choice3c2;
 
     RotateTransition rt1;
     RotateTransition rt2;
@@ -58,8 +76,6 @@ public class LoginController {
     public Stack<ChromeDriver> chromeDriverStack;
 
     public LoginController(){
-
-
     }
 
     public void initialize(){
@@ -83,6 +99,28 @@ public class LoginController {
         confirmationCircle.setVisible(false);
         line1.setVisible(false);
         line2.setVisible(false);
+
+
+        //bind all radiobuttons together in same toggle group
+        ToggleGroup toggleGroup = new ToggleGroup();
+        colorChoice1.setToggleGroup(toggleGroup);
+        colorChoice2.setToggleGroup(toggleGroup);
+        colorChoice3.setToggleGroup(toggleGroup);
+
+        switch (EaseOfUse.readFromfile("src/themeSettings.txt")) {
+            case ("1"):
+                colorChoice1.selectedProperty().set(true);
+                break;
+            case ("2"):
+                colorChoice2.selectedProperty().set(true);
+                break;
+            case("3"):
+                colorChoice3.selectedProperty().set(true);
+                break;
+            default:
+                colorChoice1.selectedProperty().set(true);
+        }
+
 
     }
 
@@ -172,6 +210,22 @@ public class LoginController {
                             //pass reference scene and controller to controller, this is used when returning to the scene;
                             controller.setMainScreenController(controller);
                             controller.setMainScene(mainScene);
+
+                            //set chosen color to controller and save selection for next time
+                            if (colorChoice1.selectedProperty().get()){
+                                controller.setTheme(choice1c1.getFill(), choice1c2.getFill());
+                                EaseOfUse.writeToFile("1", "src/themeSettings.txt");
+
+                            }else if(colorChoice2.selectedProperty().get() ){
+                                controller.setTheme(choice2c1.getFill(), choice2c2.getFill());
+                                EaseOfUse.writeToFile("2", "src/themeSettings.txt");
+
+                            }else if (colorChoice3.selectedProperty().get() ){
+                                controller.setTheme(choice3c1.getFill(), choice3c2.getFill());
+                                EaseOfUse.writeToFile("3", "src/themeSettings.txt");
+
+                            }
+
                             //finish setting up by placing node in scene and stage
 
                             stage.setScene(mainScene);

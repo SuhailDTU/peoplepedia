@@ -13,18 +13,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-import model.Categories;
-import model.CategoryHandler;
-import model.Conversion;
-import model.Person;
+import model.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.Stack;
+
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -43,6 +48,17 @@ public class Controller {
     public Label nameLabel;
     public VBox urlbox;
     public Button AddEntryButton;
+    public GridPane showDataPane;
+    public BorderPane borderPaneOuter;
+    public RadioButton chromeRadioButton;
+    public RadioButton windowWebviewRadioButton;
+    public Label select1;// labels for latest selected people
+    public Label select2;
+    public Label select3;
+    public Label peopleLabel;
+    public Label topBannerLabel;
+    public Label botBanner;
+    public Label catagoryLabel;
 
 
     CategoryHandler catagoryHandler = new CategoryHandler();
@@ -69,6 +85,17 @@ public class Controller {
     //references to editscreeens scene and controller, this is stored inorder to reuse objects.
     Scene addScene;
     AddEntryScreen addScreenController;
+
+    WebView webView = new WebView();
+    WebEngine webEngine = webView.getEngine();
+
+    //
+    ArrayList<String[]> lastSelectedPeople = new ArrayList<>();
+    Label[] selectArray;
+
+    //colorChoices
+    Paint paintChoice1;
+    Paint paintChoice2;
 
     public Controller(){
         converter.ConvertFromHexencodedFileToCommafile(encodedFileName, listingFileName);//convert from hex to comma seperated file "src/testpeoplepedia.txt"
@@ -104,6 +131,25 @@ public class Controller {
         ChromeDriverStack = chromeDriverStack;
     }
 
+    public void setTheme(Paint paint1, Paint paint2) {
+        paintChoice1 = paint1;
+        paintChoice2 = paint2;
+
+        String hex1 = EaseOfUse.getHexFromPaint(paintChoice1);
+        String hex2 = EaseOfUse.getHexFromPaint(paintChoice2);
+
+        //set color1
+        nameLabel.setStyle(" -fx-background-color: "+hex1);
+        peopleLabel.setStyle(" -fx-background-color: "+hex1);
+        catagoryLabel.setStyle(" -fx-background-color: "+hex1);
+        select1.setStyle(" -fx-background-color: "+hex1);
+        select2.setStyle(" -fx-background-color: "+hex1);
+        select3.setStyle(" -fx-background-color: "+hex1);
+        //set color2
+        topBannerLabel.setStyle(" -fx-background-color: "+hex2);
+        botBanner.setStyle(" -fx-background-color: "+hex2);
+
+    }
     @FXML
     public void initialize(){
         listvieww.setItems(categoriesObservableList);// put observalble list in listview
@@ -154,9 +200,8 @@ public class Controller {
             }
 
         });
-
+        selectArray = new Label[] {select1, select2, select3}; //put references to labels in an array
         updatePersonListcellAndData(); //set listeners on both listviews
-
 
 
 
@@ -184,14 +229,76 @@ public class Controller {
             @Override
             public void changed(ObservableValue<? extends Person> observableValue, Person person, Person newPerson) {
                 if (newPerson != null) {
-                    //createVboxData(newPerson);
-                    createHyperlinkbox(newPerson);
+                    borderPaneOuter.setCenter(showDataPane);//set urlbox and header as center if it has been removed
+                    createHyperLinkBox(newPerson);
+                    webEngine.load(""); //stop video
+
+
+                    //This part display the previously selected people
+                    lastSelectedPeople.add(new String[] {Integer.toString(listvieww.getSelectionModel().getSelectedIndex()),Integer.toString(listvieww2.getSelectionModel().getSelectedIndex()), newPerson.getName()});//add to end
+
+                    if( 3 < lastSelectedPeople.size() ){// if it gets longer than 3 remove from start
+                        lastSelectedPeople.remove(0);
+                    }
+
+                    for(int i = 0; i < lastSelectedPeople.size(); i++){ //update list with names
+                        selectArray[i].setText(lastSelectedPeople.get(i)[2]);
+                    }
+
+
                 }
             }
         });
 
         listvieww.getSelectionModel().select(0);//set default to first item category listview
 
+        //Put eventhandler on radiobuttons that places urlbox back when settings altered
+        //the buttons change between using embedded webview browser, seperate webview browser or using a seperate chrome browser
+        chromeRadioButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                borderPaneOuter.setCenter(showDataPane);//set urlbox and header as center if it has been removed
+                webEngine.load(""); //close current video
+
+            }
+        });
+        windowWebviewRadioButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                borderPaneOuter.setCenter(showDataPane);//set urlbox and header as center if it has been removed
+                webEngine.load("");//close current video
+            }
+        });
+
+
+        //place eventhandlers on last selected people so it will go to that item when clicked
+        select1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(lastSelectedPeople.size() >= 1) {
+                    listvieww.getSelectionModel().select(Integer.parseInt(lastSelectedPeople.get(0)[0]));
+                    listvieww2.getSelectionModel().select(Integer.parseInt(lastSelectedPeople.get(0)[1]));
+                }
+            }
+        });
+        select2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(lastSelectedPeople.size() >= 2) {
+                    listvieww.getSelectionModel().select(Integer.parseInt(lastSelectedPeople.get(1)[0]));
+                    listvieww2.getSelectionModel().select(Integer.parseInt(lastSelectedPeople.get(1)[1]));
+                }
+            }
+        });
+        select3.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(lastSelectedPeople.size() >= 3) {
+                    listvieww.getSelectionModel().select(Integer.parseInt(lastSelectedPeople.get(2)[0]));
+                    listvieww2.getSelectionModel().select(Integer.parseInt(lastSelectedPeople.get(2)[1]));
+                }
+            }
+        });
 
     }
 
@@ -213,20 +320,8 @@ public class Controller {
         listvieww.getSelectionModel().selectFirst();
     }
 
-    public void createVboxData(Person person){
-
-        ArrayList<String> urlList = person.getUrls();
-
-        nameLabel.setText(person.getName());
-
-        urlbox.getChildren().clear();
-        for (int i = 0; i < urlList.size(); i++){
-            urlbox.getChildren().add(new Label(urlList.get(i)));
-
-        }
-    }
-
-    public void createHyperlinkbox(Person person){
+    //this will play in the window intead of in a browser window
+    public void createHyperLinkBox(Person person){
         ArrayList<String> urlList = person.getUrls();
 
         nameLabel.setText(person.getName());
@@ -238,13 +333,45 @@ public class Controller {
             hyperlink.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    //notice the priority if chromedriver selected the button for the other setting does not matter
+                    if (chromeRadioButton.selectedProperty().get() == true){ //chromedriver
+                        //multiple window model
+                        //every event handling creates a new chromedriver, uses it to show the url and then adds it to the stack
+                        ChromeDriver newChromedriver = new ChromeDriver(chromeOptions);
+                        newChromedriver.get(hyperlink.getText());
+                        ChromeDriverStack.add(newChromedriver);
+                    }
+                    else if (windowWebviewRadioButton.selectedProperty().get() == true) { //webview in seperate window
+                        try {
+                            Stage newStage = new Stage();
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/WebScreen.fxml"));
+                            Parent root = fxmlLoader.load();
+                            WebScreenController webScreenController = fxmlLoader.getController();
+                            webScreenController.setNameLabel(listvieww2.getSelectionModel().getSelectedItem().getName());
+                            webScreenController.startVideo(hyperlink.getText());
 
+                            //attach handler to stage that closes content after we close window. this will stop the video
+                            newStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent windowEvent) {
+                                    webScreenController.startVideo("");
+                                }
+                            });
 
-                    //multiple window model
-                    //every event handling creates a new chromedriver, uses it to show the url and then adds it to the stack
-                    ChromeDriver newChromedriver = new ChromeDriver(chromeOptions);
-                    newChromedriver.get(hyperlink.getText());
-                    ChromeDriverStack.add(newChromedriver);
+                            //place root node in scene then in stage and show
+                            newStage.setScene(new Scene(root,800, 500));
+                            newStage.show();
+
+                        }catch (IOException ioException){
+
+                        }
+                    }
+                    else if (windowWebviewRadioButton.selectedProperty().get() == false && chromeRadioButton.selectedProperty().get() == false) { //webview embedded
+                        webEngine.load(hyperlink.getText());
+                        //set webview in center of app
+                        borderPaneOuter.setCenter(webView);
+                    }
+
                 }
             });
             urlbox.getChildren().add(hyperlink);
@@ -267,6 +394,10 @@ public class Controller {
                 addScreenController.setMainScreenController(mainScreenController);
                 addScreenController.setMainScene(mainScene);
 
+                //give filename references
+                addScreenController.setEncodedFileName(encodedFileName);
+                addScreenController.setListingFileName(listingFileName);
+
                 //create scene using root node
                 addScene = new Scene(root, 800, 500); //save scene for reusesal
                 //set scene
@@ -281,9 +412,9 @@ public class Controller {
             System.out.println("reused addscene instance");
 
             //clear text fields for blank entry
-            addScreenController.urlTextArea.clear();
             addScreenController.Categorytextfield.clear();
             addScreenController.nameTextField.clear();
+            addScreenController.clearListView();
             //set title and pass scene to stage
             stage.setScene(addScene);
             stage.setTitle("Entry Adder");
@@ -305,7 +436,8 @@ public class Controller {
                 //set as default values in textfield when editing entry
                 editScreenController.setCategorytextfield(listvieww.getSelectionModel().getSelectedItem().getCatagoryname());
                 editScreenController.setNameTextField(listvieww2.getSelectionModel().getSelectedItem().getName());
-                editScreenController.setUrlTextArea(listvieww2.getSelectionModel().getSelectedItem().getUrlCommaseperated());
+                editScreenController.setUrlList(listvieww2.getSelectionModel().getSelectedItem().getUrls());
+                editScreenController.setupListViewData();
 
                 //pass to controller inorder to keep track of what old entry to delete when the new edited one is added
                 editScreenController.setCategory(listvieww.getSelectionModel().getSelectedItem().getCatagoryname());
@@ -315,6 +447,10 @@ public class Controller {
                 //pass main screeen references to edit screen for returning
                 editScreenController.setMainScreenController(mainScreenController);
                 editScreenController.setMainScene(mainScene);
+
+                //pass file name references
+                editScreenController.setEncodedFileName(encodedFileName);
+                editScreenController.setListingFileName(listingFileName);
 
                 //create new scene and save reference
                 editScene = new Scene(root, 800, 500);
@@ -331,7 +467,8 @@ public class Controller {
             //set as default values in textfield when editing entry
             editScreenController.setCategorytextfield(listvieww.getSelectionModel().getSelectedItem().getCatagoryname());
             editScreenController.setNameTextField(listvieww2.getSelectionModel().getSelectedItem().getName());
-            editScreenController.setUrlTextArea(listvieww2.getSelectionModel().getSelectedItem().getUrlCommaseperated());
+            editScreenController.setUrlList(listvieww2.getSelectionModel().getSelectedItem().getUrls());
+            editScreenController.setupListViewData();
 
             //pass to controller inorder to keep track of what old entry to delete when the new edited one is added
             editScreenController.setCategory(listvieww.getSelectionModel().getSelectedItem().getCatagoryname());

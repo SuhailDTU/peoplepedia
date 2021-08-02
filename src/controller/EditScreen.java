@@ -1,9 +1,11 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -25,7 +27,9 @@ public class EditScreen {
     @FXML
     public TextField nameTextField;
     @FXML
-    public TextArea urlTextArea;
+    public TextField urlTextField;
+    @FXML
+    public ListView<String> UrlListview;
     @FXML
     public Button EditEntryButton;
     @FXML
@@ -34,10 +38,22 @@ public class EditScreen {
     Conversion converter = new Conversion();
     CategoryHandler categoryHandler = new CategoryHandler();
 
+
     //Reference to Scene and controller of the mainscreen.
     //this is used to return to the current instance of the mainscreen instead of creating a new one
     private Scene mainScene;
     private Controller mainScreenController;
+    String listingFileName;
+    String encodedFileName;
+
+    ArrayList<String> urlList;
+
+
+    public EditScreen() {
+    }
+
+    public void initialize(){
+    }
 
     public void setMainScene(Scene mainScene) {
         this.mainScene = mainScene;
@@ -47,11 +63,14 @@ public class EditScreen {
         this.mainScreenController = mainScreenController;
     }
 
-    public EditScreen() {
+    public void setListingFileName(String listingFileName) {
+        this.listingFileName = listingFileName;
     }
 
-    public void initialize(){
+    public void setEncodedFileName(String encodedFileName) {
+        this.encodedFileName = encodedFileName;
     }
+
 
     public void setCategorytextfield(String catagoryText) {
         this.Categorytextfield.setText(catagoryText);
@@ -59,10 +78,6 @@ public class EditScreen {
 
     public void setNameTextField(String nameText) {
         this.nameTextField.setText(nameText);
-    }
-
-    public void setUrlTextArea(String urlText) {
-        this.urlTextArea.setText(urlText);
     }
 
     public void setName(String name) {
@@ -77,11 +92,31 @@ public class EditScreen {
         this.commaSeperatedUrls = commaSeperatedUrls;
     }
 
+    public void setUrlList(ArrayList<String> urlList) {
+        this.urlList = urlList;
+    }
+
+    public void setupListViewData(){
+        UrlListview.getItems().clear();
+        UrlListview.setItems(FXCollections.observableArrayList(urlList));
+    }
+    public void addToListView(String addition){
+        urlList.add(addition);//add to array list
+        UrlListview.getItems().clear(); //clear listview
+        UrlListview.setItems(FXCollections.observableArrayList(urlList)); //set updated arraylist as listview
+    }
+
+    public void removeFromListView(String removal){
+        urlList.remove(removal);//add to array list
+        UrlListview.getItems().clear(); //clear listview
+        UrlListview.setItems(FXCollections.observableArrayList(urlList)); //set updated arraylist as listview
+    }
     //this function deletes an entry and adds a new edited one inorder to simulate editing it in realtime. It then returns us to main screen
     public void finishEntry(ActionEvent actionEvent) {
         //delete old entry
         categoryHandler.deleteEntry(category, name, commaSeperatedUrls);
 
+        /*
         //split the urls by delimiter and put in arraylist
         String[] urlTextArray = urlTextArea.getText().split(";");
         ArrayList<String> urlTextArraylist;
@@ -93,9 +128,9 @@ public class EditScreen {
         else{ //proceed as normal
             urlTextArraylist = new ArrayList<String>(Arrays.asList(urlTextArray));
         }
-
+        */
         //add new entry
-        categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlTextArraylist );
+        categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlList );
 
         //refresh main screen to reflect changes
         mainScreenController.refreshListView();
@@ -122,5 +157,13 @@ public class EditScreen {
         stage.setScene(mainScene); //create scene with parent node and set the scene on the stage
         stage.show(); // show stage
 
+    }
+
+    public void removeFromListview(ActionEvent actionEvent) {
+        removeFromListView(UrlListview.getSelectionModel().getSelectedItem());
+    }
+
+    public void addToListView(ActionEvent actionEvent) {
+        addToListView(urlTextField.getText());
     }
 }
