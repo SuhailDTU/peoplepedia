@@ -105,6 +105,15 @@
                      </children>
                   </AnchorPane>
                </children></AnchorPane>
+            <AnchorPane GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <children>
+                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="-6.0" text="Themes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
          </children>
       </GridPane>
    </children>

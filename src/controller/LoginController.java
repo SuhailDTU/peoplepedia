@@ -16,10 +16,15 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 import javax.crypto.Cipher;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Stack;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javafx.util.Duration;
 import model.Conversion;
@@ -78,7 +83,7 @@ public class LoginController {
     public LoginController(){
     }
 
-    public void initialize(){
+    public void initialize() {
         //Initialize rotate animation object
         rt1 = new RotateTransition(Duration.millis(500), line1);
         rt2 = new RotateTransition(Duration.millis(500), line2);
@@ -107,7 +112,26 @@ public class LoginController {
         colorChoice2.setToggleGroup(toggleGroup);
         colorChoice3.setToggleGroup(toggleGroup);
 
-        switch (EaseOfUse.readFromfile("src/themeSettings.txt")) {
+        //printing our path for debugging
+        //System.out.println(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jarDirPath = jarFile.getParentFile();
+
+        System.out.println("filepath");
+        System.out.println(jarFile.getPath());
+        System.out.println("dir path");
+        System.out.println(jarDirPath.getPath());
+        //remember to make temporary files outside of jar as they are readonly
+
+        //create themesetting file if it does not exist
+        if(!Files.exists(Paths.get(getDirPath()+"/themeSettings.txt"))){
+            //writing to a file that does not exist creates it
+            EaseOfUse.writeToFile("1", getDirPath()+"/themeSettings.txt");
+        }
+        //use themesetting file to use saved choice
+        String colorSelection = EaseOfUse.readFromfile(getDirPath()+"/themeSettings.txt");
+        System.out.println("color choice " + colorSelection);
+        switch (colorSelection) {//don use src in path when using get resource
             case ("1"):
                 colorChoice1.selectedProperty().set(true);
                 break;
@@ -123,6 +147,11 @@ public class LoginController {
 
 
     }
+    public String getDirPath(){
+        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jarDirPath = jarFile.getParentFile();
+        return jarDirPath.getPath();
+    }
 
 
 
@@ -132,6 +161,44 @@ public class LoginController {
 
     public void setChromeDriverStack(Stack<ChromeDriver> chromeDriverStack) {
         this.chromeDriverStack = chromeDriverStack;
+    }
+    //unzips files to current directory
+    public void unzipFile(String zipFilePath) {
+        try {
+            //create input stream on zipfile
+            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(getDirPath() + "/chromedriver.zip"));
+            ZipEntry zipEntry;
+            //get next entry
+            zipEntry = zipInputStream.getNextEntry();
+            while (zipEntry != null) { //
+                //create file object of zipentry in DIR
+                File newFile = new File(getDirPath() + "/" + zipEntry.getName());
+                if (zipEntry.isDirectory()) {//if zip entry is DIR make file DIR
+                    newFile.mkdir();
+                } else { //else make normal file
+                    //create parent file for zipentry since there is no zipentry for root files
+                    File parentFile = newFile.getParentFile();
+                    if (!parentFile.exists()) {
+                        parentFile.mkdir();
+                    }
+
+                    byte[] data = zipInputStream.readAllBytes();
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(newFile));
+
+                    bufferedOutputStream.write(data);
+
+                    //get enxt entry
+                    zipEntry = zipInputStream.getNextEntry();
+
+                }
+
+
+            }
+        }
+        catch (IOException ioException ){
+            ioException.printStackTrace();
+        }
+
     }
 
     //generic type eventhandler, can be used for every event, this checks whether the password entered is correct
@@ -146,7 +213,7 @@ public class LoginController {
 
             //Decrypt password file using entered password as a key
             //If the key to decrypt the file is incorrect the decrypted file will not be created
-            Conversion.encryptOrDecryptFile(textField.getText(), "src/passHid.txt","src/pass.txt", Cipher.DECRYPT_MODE);
+            Conversion.encryptOrDecryptFilejar(textField.getText(), "passHid.txt",getDirPath()+"/pass.txt", Cipher.DECRYPT_MODE);
 
 
             //The default value of the password read from the decrypted file
@@ -156,7 +223,7 @@ public class LoginController {
             //Read from decrypted file
             //If the decryption fails the file doesnt exist and this part will be passed over as the exception is handled
             //the default value of the read password will then be null
-            try(BufferedReader bufferedReader = new BufferedReader(new FileReader("src/pass.txt")) ) {
+            try(BufferedReader bufferedReader = new BufferedReader(new FileReader(getDirPath()+"/pass.txt")) ) {
                 //read from file
                 password = bufferedReader.readLine().trim();
                 System.out.println(password);
@@ -169,8 +236,49 @@ public class LoginController {
 
 
 
+
             //check if contents of password file match entered password, if it was decrypted using the right password it will otherwise it will be null
             if(textField.getText().equals(password)){
+                //creating neccesary files if they do not already exist
+                //----------------------------------------------------------------------
+                //create empty encrypted encoded file if it does not already exist
+                if(!Files.exists(Paths.get(getDirPath()+"/encryptedEncodedFile.txt"))){
+                    //create encoded file to encrypt
+                    File emptyEncodedFile = new File(getDirPath()+"/encodedfile.txt");
+                    try {
+                        emptyEncodedFile.createNewFile();
+                        Conversion.encryptOrDecryptFile(password,getDirPath()+"/encodedfile.txt", getDirPath()+"/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+                //download chromedriver zip and extract if it does not exist
+                if(!Files.exists(Paths.get(getDirPath()+"/chromedriver.exe"))){
+                    try {
+                        //download zip
+                        URL urlToDownloadFile = new URL("https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_win32.zip");
+                        BufferedInputStream bufferedInputStream = new BufferedInputStream(urlToDownloadFile.openStream());
+                        byte[] data = bufferedInputStream.readAllBytes();
+                        BufferedOutputStream bufferedOutputStream= new BufferedOutputStream(new FileOutputStream ( getDirPath() + "/chromedriver.zip"));
+                        bufferedOutputStream.write(data);
+                        bufferedOutputStream.close();
+                        bufferedInputStream.close();
+                        //unzip it
+                        EaseOfUse easeOfUse = new EaseOfUse();
+                        easeOfUse.unzipFile(getDirPath() + "/chromedriver.zip");
+                        //delete uneeded zip later
+                        File zipFile = new File(getDirPath() + "/chromedriver.zip");
+                        zipFile.deleteOnExit();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+                //----------------------------------------------------------------------
+
+
+
 
                 //reveal progress circle
                 confirmationCircle.setVisible(true);
@@ -181,12 +289,12 @@ public class LoginController {
                 rt2.play();
 
                 //remove file after program closes as we need it while program is running
-                Conversion.deleteFileOnExit("src/pass.txt");
+                Conversion.deleteFileOnExit(getDirPath()+"/pass.txt");
 
                 //if the contents was decrypted correctly use it to decrypt the contents
-                Conversion.encryptOrDecryptFile(password, "src/encryptedEncodedFile.txt","src/encodedfile.txt", Cipher.DECRYPT_MODE);
+                Conversion.encryptOrDecryptFile(password, getDirPath()+"/encryptedEncodedFile.txt",getDirPath()+"/encodedfile.txt", Cipher.DECRYPT_MODE);
                 //remove after program closes
-                Conversion.deleteFileOnExit("src/encodedfile.txt");
+                Conversion.deleteFileOnExit(getDirPath()+"/encodedfile.txt");
 
                 passwordState.setText("the password is correct");
                 passwordState.setTextFill(Color.GREEN);
@@ -199,7 +307,7 @@ public class LoginController {
                     public void handle(ActionEvent actionEvent) {
                         try {
                             //get parent node from fxml
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/sample.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/controller/view/sample.fxml"));
                             Parent root = fxmlLoader.load();
                             Scene mainScene = new Scene(root, 800, 500);
 
@@ -214,15 +322,15 @@ public class LoginController {
                             //set chosen color to controller and save selection for next time
                             if (colorChoice1.selectedProperty().get()){
                                 controller.setTheme(choice1c1.getFill(), choice1c2.getFill());
-                                EaseOfUse.writeToFile("1", "src/themeSettings.txt");
+                                EaseOfUse.writeToFile("1", getDirPath()+"/themeSettings.txt");
 
                             }else if(colorChoice2.selectedProperty().get() ){
                                 controller.setTheme(choice2c1.getFill(), choice2c2.getFill());
-                                EaseOfUse.writeToFile("2", "src/themeSettings.txt");
+                                EaseOfUse.writeToFile("2", getDirPath()+"/themeSettings.txt");
 
                             }else if (colorChoice3.selectedProperty().get() ){
                                 controller.setTheme(choice3c1.getFill(), choice3c2.getFill());
-                                EaseOfUse.writeToFile("3", "src/themeSettings.txt");
+                                EaseOfUse.writeToFile("3", getDirPath()+"/themeSettings.txt");
 
                             }
 

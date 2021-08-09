@@ -1,5 +1,4 @@
 package sample;
-
 import controller.LoginController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -10,15 +9,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import model.CategoryHandler;
 import model.Conversion;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.crypto.Cipher;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Stack;
@@ -30,13 +27,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         //create chromedriver to pass along to login screen
-        System.setProperty("webdriver.chrome.driver","src/libs/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver",getDirPath()+"/chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--incognito");
         chromeOptions.addArguments("--start-maximized");
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/loginScreen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/controller/view/loginScreen.fxml"));
         Parent root = fxmlLoader.load();
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -67,9 +64,9 @@ public class Main extends Application {
             public void handle(WindowEvent windowEvent) {
                 //Get the password if it exists, if it does exist encrypt encodedfile, otherwise ignore exception
                 String pass = "";
-                try(BufferedReader bufferedReader = new BufferedReader(new FileReader("src/pass.txt"))) {
+                try(BufferedReader bufferedReader = new BufferedReader(new FileReader("pass.txt"))) {
                     pass = bufferedReader.readLine().trim();
-                    Conversion.encryptOrDecryptFile(pass, "src/encodedfile.txt", "src/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE );
+                    Conversion.encryptOrDecryptFile(pass, getDirPath()+"/encodedfile.txt", getDirPath()+"/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE );
                     System.out.println("\nSuccesfully saved data prior to exit");
 
                 }catch (IOException ioException){
@@ -107,7 +104,11 @@ public class Main extends Application {
 
 
 
-
+    public String getDirPath(){
+        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jarDirPath = jarFile.getParentFile();
+        return jarDirPath.getPath();
+    }
 
     public static void main(String[] args) {
         launch(args);

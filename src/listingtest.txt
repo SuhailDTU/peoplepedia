@@ -1,4 +1,0 @@
-Race1;blue;0
-Race2;green;1;url1
-Race2;yellow;2;url1;url2
-Race3;orange;3;url1;url2;url3

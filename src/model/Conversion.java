@@ -160,6 +160,65 @@ public class Conversion {
     //ciphermodes----
     //Cipher.ENCRYPT_MODE
     //Cipher.DECRYPT_MODE
+    public static void encryptOrDecryptFilejar(String key, String inputFile, String outputfile, int mode){
+        try {
+            //make key 16 bytes or if already 16 bytes keep it
+            byte[] keyBytes = key.getBytes();
+            byte[] keyByteArray;
+
+            if(keyBytes.length < 16){
+                keyByteArray = new byte[16];
+                for (int i = 0; i < keyBytes.length; i++){
+                    keyByteArray[i] = keyBytes[i];
+                }
+            }else {
+                keyByteArray = key.getBytes();
+            }
+
+
+            //make key and cypher object
+            Key secretkey = new SecretKeySpec(keyByteArray, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(mode, secretkey);
+
+            //read file into bytearray
+            /*
+            File inputFileOBJ = new File(inputFile);
+            FileInputStream fileInputStream = new FileInputStream(inputFileOBJ);
+            byte[] inputArr = new byte[(int)inputFileOBJ.length()];
+            fileInputStream.read(inputArr);
+            fileInputStream.close();
+            */
+            InputStream InputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(inputFile);
+            byte[] inputArr = InputStream.readAllBytes();
+            InputStream.close();
+
+            //encrypt byte array
+            byte[] outputArr = cipher.doFinal(inputArr);
+
+            //write to file
+            File outputFileOBJ = new File(outputfile);
+            FileOutputStream fileOutputStream = new FileOutputStream(outputFileOBJ);
+            fileOutputStream.write(outputArr);
+            fileOutputStream.close();
+
+
+
+        }
+        catch (BadPaddingException badPaddingException){
+            //ignore it
+            //we handle not being able to encrypt it in the caller
+        }
+        catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+        catch (Exception exception){
+            exception.printStackTrace();
+        }
+
+
+
+    }
     public static void encryptOrDecryptFile(String key, String inputFile, String outputfile, int mode){
         try {
             //make key 16 bytes or if already 16 bytes keep it
@@ -188,6 +247,7 @@ public class Conversion {
             fileInputStream.read(inputArr);
             fileInputStream.close();
 
+
             //encrypt byte array
             byte[] outputArr = cipher.doFinal(inputArr);
 
@@ -214,7 +274,6 @@ public class Conversion {
 
 
     }
-
 
 
 

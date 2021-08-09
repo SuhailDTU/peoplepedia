@@ -49,9 +49,12 @@ public class Testing {
         catagoryHandler.addEntry("Race5", "yellow", testArrayList );
         */
 
+        //encrypt and decrypt password file
 
         //Conversion.encryptOrDecryptFile("pollo1234", "src/pass.txt", "src/passHid.txt", Cipher.ENCRYPT_MODE );
         //Conversion.encryptOrDecryptFile("1234", "src/passHid.txt", "src/pass.txt", Cipher.DECRYPT_MODE );
+
+        //encrypt and decrypt datafile
         //Conversion.encryptOrDecryptFile("pollo1234", "src/encodedfile.txt", "src/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE );
         //Conversion.encryptOrDecryptFile("1234", "src/encryptTest.txt", "src/decryptTest.txt", Cipher.DECRYPT_MODE );
 

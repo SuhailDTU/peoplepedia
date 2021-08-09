@@ -104,7 +104,7 @@ public class AddEntryScreen {
             */
 
             //use method to entry add to file
-            categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlList);
+            categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlList,listingFileName,encodedFileName);
 
             //update lists to show changes
             mainScreenController.refreshListView();

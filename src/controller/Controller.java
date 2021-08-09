@@ -38,9 +38,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Controller {
     //filename constants
 
-    public final String encodedFileName = "src/encodedfile.txt";
+    public final String encodedFileName = getDirPath()+"/encodedfile.txt";
     public final String encryptedEncodedFileName = "src/encryptedEncodedFile.txt";
-    public final String listingFileName = "src/testpeoplepedia.txt";
+    public final String listingFileName = getDirPath()+"/testpeoplepedia.txt";
 
     @FXML
     public ListView<Categories> listvieww;
@@ -122,7 +122,11 @@ public class Controller {
             }
         }
     }
-
+    public String getDirPath(){
+        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        File jarDirPath = jarFile.getParentFile();
+        return jarDirPath.getPath();
+    }
     public void setChromeOptions(ChromeOptions chromeOptions) {
         this.chromeOptions = chromeOptions;
     }
@@ -344,7 +348,7 @@ public class Controller {
                     else if (windowWebviewRadioButton.selectedProperty().get() == true) { //webview in seperate window
                         try {
                             Stage newStage = new Stage();
-                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/WebScreen.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/controller/view/WebScreen.fxml"));
                             Parent root = fxmlLoader.load();
                             WebScreenController webScreenController = fxmlLoader.getController();
                             webScreenController.setNameLabel(listvieww2.getSelectionModel().getSelectedItem().getName());
@@ -386,7 +390,7 @@ public class Controller {
             System.out.println("created new addscene instance");
             try {
                 //load add screen root node and controller
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/AddEntryScreen.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/controller/view/AddEntryScreen.fxml"));
                 Parent root = fxmlLoader.load();
                 addScreenController = fxmlLoader.getController();
 
@@ -428,7 +432,7 @@ public class Controller {
         if(editScene == null || editScreenController == null) {
             try { //create instance of editor incase there is no reference
                 System.out.println("created new editor instance");
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../controller/view/EditScreen.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/controller/view/EditScreen.fxml"));
                 Parent root = fxmlLoader.load();
                 editScreenController = fxmlLoader.getController();
 

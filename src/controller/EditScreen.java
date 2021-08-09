@@ -114,7 +114,7 @@ public class EditScreen {
     //this function deletes an entry and adds a new edited one inorder to simulate editing it in realtime. It then returns us to main screen
     public void finishEntry(ActionEvent actionEvent) {
         //delete old entry
-        categoryHandler.deleteEntry(category, name, commaSeperatedUrls);
+        categoryHandler.deleteEntry(category, name, commaSeperatedUrls,listingFileName,encodedFileName);
 
         /*
         //split the urls by delimiter and put in arraylist
@@ -130,7 +130,7 @@ public class EditScreen {
         }
         */
         //add new entry
-        categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlList );
+        categoryHandler.addEntry(Categorytextfield.getText(), nameTextField.getText(), urlList ,listingFileName,encodedFileName);
 
         //refresh main screen to reflect changes
         mainScreenController.refreshListView();
@@ -146,7 +146,7 @@ public class EditScreen {
     //this function deletes the entry and promtly returns to the mains screen
     public void DeleteEntry(ActionEvent actionEvent) {
         //delete entry
-        categoryHandler.deleteEntry(category, name, commaSeperatedUrls);
+        categoryHandler.deleteEntry(category, name, commaSeperatedUrls,listingFileName,encodedFileName);
 
         //refresh main screen to reflect changes
         mainScreenController.refreshListView();
