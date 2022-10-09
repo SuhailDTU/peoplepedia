@@ -7,6 +7,7 @@ public class Testing {
 
 
     public static void main(String[] args) throws BadPaddingException{
+        /*
        CategoryHandler catagoryHandler = new CategoryHandler();
        Conversion conversion = new Conversion();
 
@@ -25,6 +26,7 @@ public class Testing {
                 }
             }
         }
+         */
 
         //delete entry
         //catagoryHandler.deleteEntry("Race1", "blue");
@@ -57,6 +59,11 @@ public class Testing {
         //encrypt and decrypt datafile
         //Conversion.encryptOrDecryptFile("pollo1234", "src/encodedfile.txt", "src/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE );
         //Conversion.encryptOrDecryptFile("1234", "src/encryptTest.txt", "src/decryptTest.txt", Cipher.DECRYPT_MODE );
+
+
+
+
+
 
     }
 

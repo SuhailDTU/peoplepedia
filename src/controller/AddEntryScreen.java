@@ -31,6 +31,9 @@ public class AddEntryScreen {
     @FXML
     public ListView<String> UrlListview;
 
+    @FXML
+    public Button cancelButton;
+
     Conversion converter = new Conversion();
     CategoryHandler categoryHandler = new CategoryHandler();
 
@@ -119,11 +122,21 @@ public class AddEntryScreen {
 
     }
 
+    public void cancelEntry(ActionEvent actionEvent) {
+        //get stage
+        Stage stage = (Stage) nameTextField.getScene().getWindow();
+        stage.setTitle("Peoplepedia");
+        stage.setScene(mainScene); //use reference of main scene inorder to return to main screen
+
+        stage.show(); // show stage
+
+    }
     public void removeAction(ActionEvent actionEvent) {
         removeFromListView(UrlListview.getSelectionModel().getSelectedItem());
     }
 
     public void addAction(ActionEvent actionEvent) {
         addToListView(UrlText.getText());
+        UrlText.clear();
     }
 }

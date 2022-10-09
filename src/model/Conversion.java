@@ -36,15 +36,18 @@ public class Conversion {
         }
 
         //write to file in hexencoded format
+
         try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(convertedFileName))) {
 
-            hex = String.format("%02x", byteArray[0]);
+            if (byteArray.length > 0 ) { //only if the listing file contains data write to encodedfile otherwise empty encodedfile to reflect empty listingfile
 
-            bufferedWriter.write(hex);
-            for (int i = 1; i < byteArray.length; i++){
-                hex = String.format("%02x", byteArray[i]);
-                bufferedWriter.write(" " + hex);
+                hex = String.format("%02x", byteArray[0]);
 
+                bufferedWriter.write(hex);
+                for (int i = 1; i < byteArray.length; i++) {
+                    hex = String.format("%02x", byteArray[i]);
+                    bufferedWriter.write(" " + hex);
+                }
             }
 
         }catch (IOException ioException){

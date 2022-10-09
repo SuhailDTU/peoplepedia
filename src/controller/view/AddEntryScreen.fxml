@@ -56,7 +56,7 @@
       </AnchorPane>
       <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
-            <Label alignment="CENTER" prefHeight="83.0" prefWidth="430.0" text="If writing multiple urls please seperate them with the symbol ';' " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label alignment="CENTER" prefHeight="83.0" prefWidth="430.0" text="please start links with &quot;https://www.&quot;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
       <AnchorPane GridPane.columnIndex="1">
@@ -85,5 +85,10 @@
       </AnchorPane>
       <TextField fx:id="UrlText" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <ListView fx:id="UrlListview" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <AnchorPane>
+         <children>
+            <Button fx:id="cancelButton" layoutX="59.0" layoutY="51.0" mnemonicParsing="false" onAction="#cancelEntry" text="Cancel" />
+         </children>
+      </AnchorPane>
    </children>
 </GridPane>

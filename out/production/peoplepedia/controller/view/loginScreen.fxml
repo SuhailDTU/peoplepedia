@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -64,56 +62,8 @@
                </font>
             </Label>
             <TextField fx:id="textField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
-               <children>
-                  <AnchorPane layoutX="6.0" layoutY="-62.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <VBox prefHeight="90.0" prefWidth="124.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <RadioButton fx:id="colorChoice1" mnemonicParsing="false" prefHeight="30.0" prefWidth="113.0">
-                                 <graphic>
-                                    <AnchorPane>
-                                       <children>
-                                          <Circle fx:id="choice1c1" fill="#c06c84" layoutX="29.0" layoutY="15.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                          <Circle fx:id="choice1c2" fill="#f67280" layoutX="66.0" layoutY="15.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                       </children>
-                                    </AnchorPane>
-                                 </graphic>
-                              </RadioButton>
-                              <RadioButton fx:id="colorChoice2" mnemonicParsing="false" prefHeight="30.0" prefWidth="113.0">
-                                 <graphic>
-                                    <AnchorPane>
-                                       <children>
-                                          <Circle fx:id="choice2c1" fill="#1e5635" layoutX="29.0" layoutY="15.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                          <Circle fx:id="choice2c2" fill="#a4de02" layoutX="66.0" layoutY="15.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                       </children>
-                                    </AnchorPane>
-                                 </graphic>
-                              </RadioButton>
-                              <RadioButton fx:id="colorChoice3" mnemonicParsing="false" prefHeight="30.0" prefWidth="113.0">
-                                 <graphic>
-                                    <AnchorPane>
-                                       <children>
-                                          <Circle fx:id="choice3c1" fill="#03254c" layoutX="29.0" layoutY="15.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                          <Circle fx:id="choice3c2" fill="#2a9df4" layoutX="66.0" layoutY="15.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                       </children>
-                                    </AnchorPane>
-                                 </graphic>
-                              </RadioButton>
-                           </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-               </children></AnchorPane>
-            <AnchorPane GridPane.columnIndex="2" GridPane.rowIndex="2">
-               <children>
-                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="-6.0" text="Themes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <AnchorPane GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

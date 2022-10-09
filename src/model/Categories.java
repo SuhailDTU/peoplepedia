@@ -40,5 +40,11 @@ public class Categories {
         return Objects.hash(Catagoryname, people);
     }
 
-
+    @Override
+    public String toString() {
+        return "Categories{" +
+                "Catagoryname='" + Catagoryname + '\'' +
+                ", people=" + people +
+                '}';
+    }
 }

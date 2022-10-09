@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -63,6 +64,9 @@
                   <RadioButton fx:id="windowWebviewRadioButton" mnemonicParsing="false" text="Seperate window" />
                </children>
             </AnchorPane>
+            <Button layoutX="610.0" layoutY="6.0" mnemonicParsing="false" onAction="#accessThemeMenu" text="Change Theme" />
+            <Button fx:id="musicButton" layoutX="257.0" layoutY="6.0" mnemonicParsing="false" onAction="#playCurrentTrack" text="On/Off" />
+            <Slider fx:id="volumeSlider" layoutX="470.0" layoutY="12.0" value="50.0" />
          </children>
       </AnchorPane>
    </top>

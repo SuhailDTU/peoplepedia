@@ -44,25 +44,7 @@ public class LoginController {
 
     @FXML
     public Circle confirmationCircle;
-    //these are used to get color of choices
-    @FXML
-    public RadioButton colorChoice1;
-    @FXML
-    public RadioButton colorChoice2;
-    @FXML
-    public RadioButton colorChoice3;
-    @FXML
-    public Circle choice1c1;
-    @FXML
-    public Circle choice1c2;
-    @FXML
-    public Circle choice2c1;
-    @FXML
-    public Circle choice2c2;
-    @FXML
-    public Circle choice3c1;
-    @FXML
-    public Circle choice3c2;
+
 
     RotateTransition rt1;
     RotateTransition rt2;
@@ -106,11 +88,7 @@ public class LoginController {
         line2.setVisible(false);
 
 
-        //bind all radiobuttons together in same toggle group
-        ToggleGroup toggleGroup = new ToggleGroup();
-        colorChoice1.setToggleGroup(toggleGroup);
-        colorChoice2.setToggleGroup(toggleGroup);
-        colorChoice3.setToggleGroup(toggleGroup);
+
 
         //printing our path for debugging
         //System.out.println(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
@@ -123,26 +101,10 @@ public class LoginController {
         System.out.println(jarDirPath.getPath());
         //remember to make temporary files outside of jar as they are readonly
 
-        //create themesetting file if it does not exist
-        if(!Files.exists(Paths.get(getDirPath()+"/themeSettings.txt"))){
+        //create themesettingsv2Chosen file if it does not exist
+        if(!Files.exists(Paths.get(getDirPath()+"/themeSettingsv2Chosen.txt"))){
             //writing to a file that does not exist creates it
-            EaseOfUse.writeToFile("1", getDirPath()+"/themeSettings.txt");
-        }
-        //use themesetting file to use saved choice
-        String colorSelection = EaseOfUse.readFromfile(getDirPath()+"/themeSettings.txt");
-        System.out.println("color choice " + colorSelection);
-        switch (colorSelection) {//don use src in path when using get resource
-            case ("1"):
-                colorChoice1.selectedProperty().set(true);
-                break;
-            case ("2"):
-                colorChoice2.selectedProperty().set(true);
-                break;
-            case("3"):
-                colorChoice3.selectedProperty().set(true);
-                break;
-            default:
-                colorChoice1.selectedProperty().set(true);
+            EaseOfUse.writeToFile("#c06c84\n#f67280", getDirPath()+"/themeSettingsv2Chosen.txt");
         }
 
 
@@ -226,7 +188,7 @@ public class LoginController {
             try(BufferedReader bufferedReader = new BufferedReader(new FileReader(getDirPath()+"/pass.txt")) ) {
                 //read from file
                 password = bufferedReader.readLine().trim();
-                System.out.println(password);
+                //System.out.println(password);//print out password for testing
 
 
 
@@ -252,11 +214,21 @@ public class LoginController {
                         ioException.printStackTrace();
                     }
                 }
+                if(!Files.exists(Paths.get(getDirPath()+"/encryptedEncodedFile2.txt"))){
+                    //create encoded file to encrypt
+                    File emptyEncodedFile2 = new File(getDirPath()+"/encodedfile2.txt");
+                    try {
+                        emptyEncodedFile2.createNewFile();
+                        Conversion.encryptOrDecryptFile(password,getDirPath()+"/encodedfile2.txt", getDirPath()+"/encryptedEncodedFile2.txt", Cipher.ENCRYPT_MODE);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
                 //download chromedriver zip and extract if it does not exist
                 if(!Files.exists(Paths.get(getDirPath()+"/chromedriver.exe"))){
                     try {
                         //download zip
-                        URL urlToDownloadFile = new URL("https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_win32.zip");
+                        URL urlToDownloadFile = new URL("https://chromedriver.storage.googleapis.com/93.0.4577.63/chromedriver_win32.zip");
                         BufferedInputStream bufferedInputStream = new BufferedInputStream(urlToDownloadFile.openStream());
                         byte[] data = bufferedInputStream.readAllBytes();
                         BufferedOutputStream bufferedOutputStream= new BufferedOutputStream(new FileOutputStream ( getDirPath() + "/chromedriver.zip"));
@@ -293,8 +265,9 @@ public class LoginController {
 
                 //if the contents was decrypted correctly use it to decrypt the contents
                 Conversion.encryptOrDecryptFile(password, getDirPath()+"/encryptedEncodedFile.txt",getDirPath()+"/encodedfile.txt", Cipher.DECRYPT_MODE);
-                //remove after program closes
+                //remove unencrypted files after program closes
                 Conversion.deleteFileOnExit(getDirPath()+"/encodedfile.txt");
+
 
                 passwordState.setText("the password is correct");
                 passwordState.setTextFill(Color.GREEN);
@@ -318,24 +291,20 @@ public class LoginController {
                             //pass reference scene and controller to controller, this is used when returning to the scene;
                             controller.setMainScreenController(controller);
                             controller.setMainScene(mainScene);
+                            controller.setupKeyLogOnScene();
 
-                            //set chosen color to controller and save selection for next time
-                            if (colorChoice1.selectedProperty().get()){
-                                controller.setTheme(choice1c1.getFill(), choice1c2.getFill());
-                                EaseOfUse.writeToFile("1", getDirPath()+"/themeSettings.txt");
+                            //create instance of loading screen
+                            controller.createInstanceOfLoadingScreen();
 
-                            }else if(colorChoice2.selectedProperty().get() ){
-                                controller.setTheme(choice2c1.getFill(), choice2c2.getFill());
-                                EaseOfUse.writeToFile("2", getDirPath()+"/themeSettings.txt");
+                            //set saved selection of color as theme
+                            BufferedReader bufferedReader = new BufferedReader(new FileReader(getDirPath() + "/themeSettingsv2Chosen.txt"));
+                            String color1 = bufferedReader.readLine();
+                            String color2 = bufferedReader.readLine();
+                            bufferedReader.close();
+                            controller.setTheme(color1, color2);
 
-                            }else if (colorChoice3.selectedProperty().get() ){
-                                controller.setTheme(choice3c1.getFill(), choice3c2.getFill());
-                                EaseOfUse.writeToFile("3", getDirPath()+"/themeSettings.txt");
-
-                            }
 
                             //finish setting up by placing node in scene and stage
-
                             stage.setScene(mainScene);
                             stage.setTitle("Peoplepedia");
                             stage.show();

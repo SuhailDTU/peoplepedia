@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Stack;
 
 public class Main extends Application {
@@ -35,14 +37,7 @@ public class Main extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/controller/view/loginScreen.fxml"));
         Parent root = fxmlLoader.load();
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if(keyEvent.getCode() == KeyCode.ENTER){
 
-                }
-            }
-        });
         primaryStage.setTitle("Peoplepedia login");
         primaryStage.setScene(new Scene(root, 600, 400));
 
@@ -64,13 +59,21 @@ public class Main extends Application {
             public void handle(WindowEvent windowEvent) {
                 //Get the password if it exists, if it does exist encrypt encodedfile, otherwise ignore exception
                 String pass = "";
-                try(BufferedReader bufferedReader = new BufferedReader(new FileReader("pass.txt"))) {
+                try(BufferedReader bufferedReader = new BufferedReader(new FileReader(getDirPath()+"/pass.txt"))) {
                     pass = bufferedReader.readLine().trim();
+                    //System.out.println("password="+pass );//debugging
                     Conversion.encryptOrDecryptFile(pass, getDirPath()+"/encodedfile.txt", getDirPath()+"/encryptedEncodedFile.txt", Cipher.ENCRYPT_MODE );
+                    if(Files.exists(Paths.get(getDirPath()+"/encodedfile2.txt"))){
+                        Conversion.encryptOrDecryptFile(pass, getDirPath()+"/encodedfile2.txt", getDirPath()+"/encryptedEncodedFile2.txt", Cipher.ENCRYPT_MODE );
+                    }
                     System.out.println("\nSuccesfully saved data prior to exit");
 
+                    //to ensure the files are deleted
+                    Files.deleteIfExists(Paths.get(getDirPath() + "/encodedfile.txt"));
+                    Files.deleteIfExists(Paths.get(getDirPath() + "/encodedfile2.txt"));
+
                 }catch (IOException ioException){
-                    //ioException.printStackTrace();
+                    ioException.printStackTrace();
                     System.out.println("\nCould not save data prior to exit");
                 }
 

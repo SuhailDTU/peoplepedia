@@ -35,4 +35,11 @@ public class Person {
         }
         return urlString;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

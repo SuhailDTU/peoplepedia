@@ -35,6 +35,9 @@ public class EditScreen {
     @FXML
     public Button DeleteEntryButton;
 
+    @FXML
+    public Button cancelButton;
+
     Conversion converter = new Conversion();
     CategoryHandler categoryHandler = new CategoryHandler();
 
@@ -159,11 +162,21 @@ public class EditScreen {
 
     }
 
+    public void cancelEntry(ActionEvent actionEvent) {
+        //get stage
+        Stage stage = (Stage) nameTextField.getScene().getWindow();
+        stage.setTitle("Peoplepedia");
+        stage.setScene(mainScene); //use reference of main scene inorder to return to main screen
+
+        stage.show(); // show stage
+
+    }
     public void removeFromListview(ActionEvent actionEvent) {
         removeFromListView(UrlListview.getSelectionModel().getSelectedItem());
     }
 
     public void addToListView(ActionEvent actionEvent) {
         addToListView(urlTextField.getText());
+        urlTextField.clear();
     }
 }
